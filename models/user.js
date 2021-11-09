@@ -17,7 +17,7 @@ const User = mongoose.model('User', new mongoose.Schema({
     type: String,
     required: true,
     minlength: 8,
-    maxlength: 16
+    maxlength: 255
   }
 }));
 
