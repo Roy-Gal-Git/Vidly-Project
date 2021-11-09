@@ -1,5 +1,7 @@
 const _ = require('lodash');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const config = require('config');
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
@@ -42,7 +44,9 @@ router.post('/register', async (req, res) => {
   try {
     user = await user.save();
 
-    res.send(_.pick(user, ['name', 'email', '_id']));
+    const token = jwt.sign({ _id: user._id }, config.get('jwtPrivateKey'));
+
+    res.header('x-auth-token', token).send(_.pick(user, ['name', 'email', '_id']));
   }
   catch (err) {
     res.status(400).send(`ERROR: ${err.message}`);
