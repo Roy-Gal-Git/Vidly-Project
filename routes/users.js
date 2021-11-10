@@ -8,6 +8,17 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const { User, validate } = require('../models/user');
 
+
+router.get('/me', auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).select('-password');
+    res.send(user);
+  }
+  catch (err) {
+    res.status(400).send(`ERROR: ${err.message}`);
+  }
+})
+
 // POST Request -> add user
 router.post('/register', auth, async (req, res) => {
   const { error } = validate(req.body);
