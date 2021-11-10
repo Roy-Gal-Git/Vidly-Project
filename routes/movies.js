@@ -3,6 +3,7 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const {Genre} = require('../models/genre');
 const { Movie, validate } = require('../models/movie');
+const auth = require('../middleware/auth');
 
 // GET Request -> all movies
 router.get('/', async (req, res) => {
@@ -30,7 +31,7 @@ router.get('/:id', async (req, res) => {
 
 
 // POST Request -> add movie
-router.post('/add_movie', async (req, res) => {
+router.post('/add_movie', auth, async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message) // 400
 
@@ -58,7 +59,7 @@ router.post('/add_movie', async (req, res) => {
 
 
 // PUT Request - update movie
-router.put('/:id', async (req, res) => {
+router.put('/:id', auth, async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message); // 400
 
@@ -71,7 +72,7 @@ router.put('/:id', async (req, res) => {
 
 
 // DELETE Request - delete movie
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', auth, async (req, res) => {
   const movie = await Movie.findByIdAndRemove(req.params.id);
 
   if (!movie) return res.status(404).send('404: Movie not found.') // 404

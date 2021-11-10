@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const { Customer, validate} = require('../models/customer')
+const auth = require('../middleware/auth');
 
 router.get('/', async (req, res) => {
   const customers = await Customer.find().sort('name').lean();
@@ -17,7 +18,7 @@ router.get('/:id', async (req, res) => {
 });
 
 
-router.post('/add_customer', async (req, res) => {
+router.post('/add_customer',auth, async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
@@ -37,7 +38,7 @@ router.post('/add_customer', async (req, res) => {
 });
 
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', auth, async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
@@ -48,7 +49,7 @@ router.put('/:id', async (req, res) => {
 });
 
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', auth, async (req, res) => {
   const customer = await Customer.findByIdAndRemove(req.params.id, { new: true});
   if (!customer) return res.status(404).send("404: User not found.");
 

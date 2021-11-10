@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const bcrypt = require('bcrypt');
+const auth = require('../middleware/auth');
 const jwt = require('jsonwebtoken');
 const config = require('config');
 const express = require('express');
@@ -30,7 +31,7 @@ router.get('/:id', async (req, res) => {
 
 
 // POST Request -> add rental
-router.post('/register', async (req, res) => {
+router.post('/register', auth, async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message) // 400
 
@@ -54,7 +55,7 @@ router.post('/register', async (req, res) => {
 
 
 // DELETE Request - delete rental
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', auth, async (req, res) => {
   const user = await User.findByIdAndRemove(req.params.id);
 
   if (!user) return res.status(404).send('404: User not found.') // 404
