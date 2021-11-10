@@ -6,31 +6,6 @@ const { Customer } = require('../models/customer');
 const { Rental, validate } = require('../models/rental');
 const auth = require('../middleware/auth');
 
-// GET Request -> all rentals
-router.get('/', async (req, res) => {
-  const rentals = await Rental
-    .find()
-    .populate('customer', 'name -_id')
-    .populate('movie', 'name -_id')
-    .sort('name')
-    .lean();
-
-  res.send(rentals);
-});
-
-// GET request -> by id
-router.get('/:id', async (req, res) => {
-  const rental = await Rental
-    .findById(req.params.id)
-    .populate('customer', 'name -_id')
-    .populate('movie', 'name -_id')
-    .lean();
-
-  if (!rental) return res.status(404).send('404: Rental not found.') // 404
-
-  res.send(rental);
-});
-
 
 // POST Request -> add rental
 router.post('/add_rental', auth, async (req, res) => {

@@ -4,19 +4,6 @@ const mongoose = require('mongoose');
 const { Customer, validate} = require('../models/customer')
 const auth = require('../middleware/auth');
 
-router.get('/', async (req, res) => {
-  const customers = await Customer.find().sort('name').lean();
-  res.send(customers);
-});
-
-
-router.get('/:id', async (req, res) => {
-  const customers = await Customer.findById(req.params.id).sort('name').lean();
-  if (!customers) return res.status(404).send("404: User not found.");
-
-  res.send(customers);
-});
-
 
 router.post('/add_customer',auth, async (req, res) => {
   const { error } = validate(req.body);
