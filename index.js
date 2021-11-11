@@ -1,6 +1,7 @@
 const express = require('express');
 const Joi = require('joi');
 const config = require('config');
+const winston = require('winston');
 Joi.objectId = require('joi-objectid')(Joi);
 const genres = require('./routes/genres');
 const customers = require('./routes/customers');
@@ -10,8 +11,12 @@ const users = require('./routes/users');
 const auth = require('./routes/auth');
 const error = require('./middleware/error');
 require('express-async-errors');
+require('winston-mongodb');
 const mongoose = require('mongoose');
 app = express();
+
+winston.add(winston.transports.File, { filename: 'logfile.log' })
+winston.add(winston.transports.MongoDB, { db: 'mongodb://localhost/vidly' })
 
 if (!config.get('jwtPrivateKey')) {
   console.log('FATAL ERROR: jwtPrivateKey is not defined.');
