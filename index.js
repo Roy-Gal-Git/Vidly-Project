@@ -9,6 +9,7 @@ const rentals = require('./routes/rentals');
 const users = require('./routes/users');
 const auth = require('./routes/auth');
 const error = require('./middleware/error');
+require('express-async-errors');
 const mongoose = require('mongoose');
 app = express();
 
