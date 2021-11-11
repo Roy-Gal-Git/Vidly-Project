@@ -7,13 +7,13 @@ const { Genre, validate } = require('../models/genre');
 
 
 // GET Request -> all genres
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
   try {
   const genres = await Genre.find().sort('name').lean();
   res.send(genres);
   }
   catch (ex) {
-    res.status(500).send('Something failed.');
+    next(ex);
   }
 });
 
