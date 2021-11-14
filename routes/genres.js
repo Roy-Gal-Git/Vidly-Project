@@ -37,7 +37,7 @@ router.post('/add_genre', auth, async (req, res) => {
   if (error) return res.status(400).send(error.details[0].message) // 400
   let genre = new Genre({
     name: req.body.name
-  };
+  });
 
   try {
     await genre.save();
@@ -46,7 +46,7 @@ router.post('/add_genre', auth, async (req, res) => {
   catch (err) {
     console.log("ERROR:", err.message);
   }
-}));
+});
 
 
 // PUT Request - update genre
