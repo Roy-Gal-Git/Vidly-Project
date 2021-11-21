@@ -13,16 +13,19 @@ router.get('/', async (req, res, next) => {
 });
 
 
-// GET Request -> by name
-router.get('/:genre', async (req, res) => {
-  const genre = await Genre.find({ name: req.params.genre }).sort().lean();
-  if (!genre) return res.status(404).send('404: Genre not found.') // 404
+// // GET Request -> by name
+// router.get('/:genre', async (req, res) => {
+//   const genre = await Genre.find({ name: req.params.genre }).sort().lean();
+//   if (!genre) return res.status(404).send('404: Genre not found.') // 404
 
-  res.send(genre);
-});
+//   res.send(genre);
+// });
 
 // GET request -> by id
 router.get('/:id', async (req, res) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.id))
+    return res.status(404).send('Invalid ID.');
+
   const genre = await Genre.findById(req.params.id);
 
   if (!genre) return res.status(404).send('404: Genre not found.') // 404
