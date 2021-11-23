@@ -4,6 +4,7 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const { Genre, validate } = require('../models/genre');
+const validateObjectId = require('../middleware/validateObjectId');
 
 
 // GET Request -> all genres
@@ -22,9 +23,8 @@ router.get('/', async (req, res, next) => {
 // });
 
 // GET request -> by id
-router.get('/:id', async (req, res) => {
-  if (!mongoose.Types.ObjectId.isValid(req.params.id))
-    return res.status(404).send('Invalid ID.');
+router.get('/:id', validateObjectId, async (req, res) => {
+  
 
   const genre = await Genre.findById(req.params.id);
 
