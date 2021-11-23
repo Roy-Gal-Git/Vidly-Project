@@ -35,7 +35,7 @@ router.get('/:id', validateObjectId, async (req, res) => {
 
 
 // POST Request -> add genre
-router.post('/add_genre', auth, async (req, res) => {  
+router.post('/add_genre', [auth, admin], async (req, res) => {  
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message) // 400
   let genre = new Genre({
@@ -43,7 +43,7 @@ router.post('/add_genre', auth, async (req, res) => {
   });
 
   try {
-    await genre.save();
+    genre = await genre.save();
     res.send(genre);
   }
   catch (err) {
@@ -53,7 +53,7 @@ router.post('/add_genre', auth, async (req, res) => {
 
 
 // PUT Request - update genre
-router.put('/:id', auth, async (req, res) => {
+router.put('/:id', [auth, admin], async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message); // 400
 
