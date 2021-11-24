@@ -24,8 +24,6 @@ router.get('/', async (req, res, next) => {
 
 // GET request -> by id
 router.get('/:id', validateObjectId, async (req, res) => {
-  
-
   const genre = await Genre.findById(req.params.id);
 
   if (!genre) return res.status(404).send('404: Genre not found.') // 404
