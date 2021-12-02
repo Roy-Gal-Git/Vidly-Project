@@ -1,22 +1,30 @@
 const request = require('supertest');
 const { Genre } = require('../../models/genre');
 const { User } = require('../../models/user');
+const mongoose = require('mongoose');
 let server;
 
 describe('auth middleware', () => {
-  beforeEach(() => { 
+  beforeAll(async () => { 
     server = require('../../index');
+    await Genre.remove({});
     token = new User({ 
       name:'One',
       email: 'OneTwoThree@gmail.com',
       password: '123',
       isAdmin: true })
       .generateAuthToken();
+
   });
   afterEach(async () => {
-    server.close(); 
+  
     await Genre.remove({});
   });
+  afterAll(async () => {
+    await server.close(); 
+    await mongoose.connection.close();
+    await mongoose.disconnect();
+  })
   
   let token;
 

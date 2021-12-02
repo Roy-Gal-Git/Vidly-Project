@@ -5,11 +5,19 @@ const { User } = require('../../models/user');
 let server;
 
 describe('/api/genres', () => {
-  beforeEach(() => { server = require('../../index'); });
+  beforeAll(async () => { server = require('../../index');
+  await Genre.remove({});
+});
   afterEach(async () => { 
-    server.close();
+
     await Genre.remove({});
   });
+
+  afterAll(async () => {
+    await server.close();
+    await mongoose.connection.close();
+    await mongoose.disconnect();
+  })
 
   describe('GET /', () => {
     it('should return all genres', async () => {
@@ -17,7 +25,7 @@ describe('/api/genres', () => {
         { name: 'genre1' },
         { name: 'genre2' }
       ]);
-
+      
       const res = await request(server).get('/api/genres');
       expect(res.status).toBe(200);
       expect(res.body.length).toBe(2);
