@@ -17,7 +17,6 @@ describe('auth middleware', () => {
 
   });
   afterEach(async () => {
-  
     await Genre.remove({});
   });
   afterAll(async () => {

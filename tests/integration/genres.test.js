@@ -5,11 +5,11 @@ const { User } = require('../../models/user');
 let server;
 
 describe('/api/genres', () => {
-  beforeAll(async () => { server = require('../../index');
-  await Genre.remove({});
-});
+  beforeAll(async () => { 
+    server = require('../../index');
+    await Genre.remove({});
+  });
   afterEach(async () => { 
-
     await Genre.remove({});
   });
 
