@@ -1,3 +1,4 @@
-node_modules
-uncaughtExceptions.log
-logfile.log
+backend/node_modules
+backend/uncaughtExceptions.log
+backend/logfile.log
+frontend/vidly
