@@ -8,7 +8,7 @@ const auth = require('../middleware/auth');
 
 
 // POST Request -> add rental
-router.post('/add_rental', auth, async (req, res) => {
+router.post('/', auth, async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message) // 400
 

@@ -5,7 +5,7 @@ const { Customer, validate} = require('../models/customer')
 const auth = require('../middleware/auth');
 
 
-router.post('/add_customer',auth, async (req, res) => {
+router.post('/',auth, async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
