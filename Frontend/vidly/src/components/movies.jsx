@@ -19,7 +19,7 @@ class Movies extends Component {
           <td>
             <button
               onClick={() => this.handleDelete(_id)}
-              className="btn-danger btn-sm"
+              className="btn btn-danger btn-sm"
             >
               Delete
             </button>
@@ -42,21 +42,21 @@ class Movies extends Component {
   render() {
     return (
       <React.Fragment>
-        <main className="container mt-4">
-          <div className="mb-3">
-            {this.state.movies.length > 0
-              ? `Showing ${this.state.movies.length} movies in the database.`
-              : `There are no movies in the database.`}
-          </div>
-          <table id="movies" className="table table-hover">
-            <tbody>
-              <tr>
-                {this.state.movies.length > 0 ? this.renderTableHeader() : null}
-              </tr>
-              {this.renderTableData()}
-            </tbody>
-          </table>
-        </main>
+        <div className="mb-3">
+          {this.state.movies.length > 0 ? (
+            <p>Showing {this.state.movies.length} movies in the database.</p>
+          ) : (
+            <p>There are no movies in the database.</p>
+          )}
+        </div>
+        <table id="movies" className="table table-hover">
+          <tbody>
+            <tr>
+              {this.state.movies.length > 0 ? this.renderTableHeader() : null}
+            </tr>
+            {this.renderTableData()}
+          </tbody>
+        </table>
       </React.Fragment>
     );
   }

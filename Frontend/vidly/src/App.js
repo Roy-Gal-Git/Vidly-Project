@@ -5,7 +5,7 @@ import "./App.css";
 class App extends React.Component {
   render() {
     return (
-      <main className="container">
+      <main className="container mt-4">
         <Movies />
       </main>
     );
