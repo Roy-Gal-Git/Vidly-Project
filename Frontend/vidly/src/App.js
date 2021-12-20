@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Movies from "./components/movies";
 import "./App.css";
 
-class App extends React.Component {
+class App extends Component {
   render() {
     return (
       <main className="container">
