@@ -1,33 +1,12 @@
 import React, { Component } from "react";
 import * as moviesAPI from "../services/fakeMovieService";
+import Like from "./like";
 
 class Movies extends Component {
   state = {
     movies: moviesAPI.getMovies(),
-    header: ["Title", "Gebre", "Stock", "Rate", ""],
+    header: ["Title", "Genre", "Stock", "Rate", "Liked", ""],
   };
-
-  renderTableData() {
-    return this.state.movies.map((movie, index) => {
-      const { _id, title, genre, numberInStock, dailyRentalRate } = movie;
-      return (
-        <tr key={_id}>
-          <td>{title}</td>
-          <td>{genre.name}</td>
-          <td>{numberInStock}</td>
-          <td>{dailyRentalRate}</td>
-          <td>
-            <button
-              onClick={() => this.handleDelete(_id)}
-              className="btn btn-danger btn-sm"
-            >
-              Delete
-            </button>
-          </td>
-        </tr>
-      );
-    });
-  }
 
   handleDelete(_id) {
     this.setState({
@@ -35,9 +14,14 @@ class Movies extends Component {
     });
   }
 
-  renderTableHeader() {
-    return this.state.header.map((key, index) => <th key={index}>{key}</th>);
-  }
+  handleLike = (movie) => {
+    const movies = [...this.state.movies];
+    const index = movies.indexOf(movie);
+    movies[index] = { ...movies[index] };
+    movies[index].liked = !movies[index].liked;
+
+    this.setState({ movies });
+  };
 
   render() {
     return (
@@ -50,11 +34,49 @@ class Movies extends Component {
           )}
         </div>
         <table id="movies" className="table table-hover">
-          <tbody>
+          <thead>
             <tr>
-              {this.state.movies.length > 0 ? this.renderTableHeader() : null}
+              <th>Title</th>
+              <th>Genre</th>
+              <th>Stock</th>
+              <th>Rate</th>
+              <th>Liked</th>
+              <th></th>
             </tr>
-            {this.renderTableData()}
+          </thead>
+          <tbody>
+            {this.state.movies.map((movie) => {
+              const {
+                _id,
+                title,
+                genre,
+                numberInStock,
+                dailyRentalRate,
+                liked,
+              } = movie;
+              return (
+                <tr key={_id}>
+                  <td>{title}</td>
+                  <td>{genre.name}</td>
+                  <td>{numberInStock}</td>
+                  <td>{dailyRentalRate}</td>
+                  <td>
+                    <Like
+                      liked={liked}
+                      onClick={() => this.handleLike(movie)}
+                    />
+                  </td>
+                  <td>
+                    <button
+                      onClick={() => this.handleDelete(_id)}
+                      className="btn btn-danger btn-sm"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </React.Fragment>
