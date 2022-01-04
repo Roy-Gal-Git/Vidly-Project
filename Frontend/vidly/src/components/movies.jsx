@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import * as moviesAPI from "../services/fakeMovieService";
 import Like from "./like";
+import Pagination from "./pagination";
 
 class Movies extends Component {
   state = {
     movies: moviesAPI.getMovies(),
-    header: ["Title", "Genre", "Stock", "Rate", "Liked", ""],
+    pageSize: 10,
   };
 
   handleDelete(_id) {
@@ -21,6 +22,36 @@ class Movies extends Component {
     movies[index].liked = !movies[index].liked;
 
     this.setState({ movies });
+  };
+
+  handlePageChange = (page) => {
+    console.log(page);
+  };
+
+  getMoviesHtml = () => {
+    return this.state.movies.map((movie) => {
+      const { _id, title, genre, numberInStock, dailyRentalRate, liked } =
+        movie;
+      return (
+        <tr key={_id}>
+          <td>{title}</td>
+          <td>{genre.name}</td>
+          <td>{numberInStock}</td>
+          <td>{dailyRentalRate}</td>
+          <td>
+            <Like liked={liked} onClick={() => this.handleLike(movie)} />
+          </td>
+          <td>
+            <button
+              onClick={() => this.handleDelete(_id)}
+              className="btn btn-danger btn-sm"
+            >
+              Delete
+            </button>
+          </td>
+        </tr>
+      );
+    });
   };
 
   render() {
@@ -44,41 +75,13 @@ class Movies extends Component {
               <th></th>
             </tr>
           </thead>
-          <tbody>
-            {this.state.movies.map((movie) => {
-              const {
-                _id,
-                title,
-                genre,
-                numberInStock,
-                dailyRentalRate,
-                liked,
-              } = movie;
-              return (
-                <tr key={_id}>
-                  <td>{title}</td>
-                  <td>{genre.name}</td>
-                  <td>{numberInStock}</td>
-                  <td>{dailyRentalRate}</td>
-                  <td>
-                    <Like
-                      liked={liked}
-                      onClick={() => this.handleLike(movie)}
-                    />
-                  </td>
-                  <td>
-                    <button
-                      onClick={() => this.handleDelete(_id)}
-                      className="btn btn-danger btn-sm"
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
+          <tbody>{this.getMoviesHtml()}</tbody>
         </table>
+        <Pagination
+          itemsCount={this.state.movies.length}
+          pageSize={this.state.pageSize}
+          onPageChange={this.handlePageChange}
+        />
       </React.Fragment>
     );
   }
