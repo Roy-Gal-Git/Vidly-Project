@@ -6,7 +6,8 @@ import Pagination from "./pagination";
 class Movies extends Component {
   state = {
     movies: moviesAPI.getMovies(),
-    pageSize: 10,
+    pageSize: 4,
+    currentPage: 1,
   };
 
   handleDelete(_id) {
@@ -25,13 +26,15 @@ class Movies extends Component {
   };
 
   handlePageChange = (page) => {
-    console.log(page);
+    this.setState({ currentPage: page})
   };
 
   getMoviesHtml = () => {
     return this.state.movies.map((movie) => {
       const { _id, title, genre, numberInStock, dailyRentalRate, liked } =
         movie;
+
+
       return (
         <tr key={_id}>
           <td>{title}</td>
@@ -55,6 +58,8 @@ class Movies extends Component {
   };
 
   render() {
+    const { currentPage, pageSize } = this.state;
+
     return (
       <React.Fragment>
         <div className="mb-3">
@@ -79,8 +84,9 @@ class Movies extends Component {
         </table>
         <Pagination
           itemsCount={this.state.movies.length}
-          pageSize={this.state.pageSize}
+          pageSize={pageSize}
           onPageChange={this.handlePageChange}
+          currentPage={currentPage}
         />
       </React.Fragment>
     );
