@@ -66,24 +66,27 @@ class Movies extends Component {
       <React.Fragment>
         <div className="mb-3">
           {allMovies.length > 0 ? (
-            <p>Showing {allMovies.length} movies in the database.</p>
+            <React.Fragment>
+              <p>Showing {allMovies.length} movies in the database.</p>
+              <table id="movies" className="table table-hover">
+                <thead>
+                  <tr>
+                    <th>Title</th>
+                    <th>Genre</th>
+                    <th>Stock</th>
+                    <th>Rate</th>
+                    <th>Liked</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>{this.getMoviesHtml(movies)}</tbody>
+              </table>
+            </React.Fragment>
           ) : (
             <p>There are no movies in the database.</p>
           )}
         </div>
-        <table id="movies" className="table table-hover">
-          <thead>
-            <tr>
-              <th>Title</th>
-              <th>Genre</th>
-              <th>Stock</th>
-              <th>Rate</th>
-              <th>Liked</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>{this.getMoviesHtml(movies)}</tbody>
-        </table>
+
         <Pagination
           itemsCount={allMovies.length}
           pageSize={pageSize}
