@@ -1,15 +1,23 @@
 import React, { Component } from "react";
-import * as moviesAPI from "../services/fakeMovieService";
+import { getMovies } from "../services/fakeMovieService";
+import { getGenres } from "../services/fakeGenreService";
 import Like from "./like";
 import Pagination from "./pagination";
+import ListGroup from "./listGroup";
 import { paginate } from "../utils/paginate";
 
 class Movies extends Component {
   state = {
-    movies: moviesAPI.getMovies(),
+    movies: [],
+    genres: [],
     pageSize: 4,
     currentPage: 1,
   };
+
+  componentDidMount() {
+    const genres = [{ name: "All Genres" }, ...getGenres()];
+    this.setState({ movies: getMovies(), genres });
+  }
 
   handleDelete(_id) {
     this.setState({
@@ -28,6 +36,10 @@ class Movies extends Component {
 
   handlePageChange = (page) => {
     this.setState({ currentPage: page });
+  };
+
+  handleGenreSelect = (genre) => {
+    this.setState({ selectedGenre: genre, currentPage: 1});
   };
 
   getMoviesHtml = (movies) => {
@@ -58,42 +70,57 @@ class Movies extends Component {
   };
 
   render() {
-    const { currentPage, pageSize, movies: allMovies } = this.state;
+    const {
+      currentPage,
+      pageSize,
+      selectedGenre,
+      movies: allMovies,
+    } = this.state;
 
-    const movies = paginate(allMovies, currentPage, pageSize);
+    const filtered =
+      selectedGenre && selectedGenre._id
+        ? allMovies.filter((m) => m.genre._id === selectedGenre._id)
+        : allMovies;
+
+    const movies = paginate(filtered, currentPage, pageSize);
+
+    if (allMovies.length === 0)
+      return <p>There are no movies in the database.</p>;
 
     return (
-      <React.Fragment>
-        <div className="mb-3">
-          {allMovies.length > 0 ? (
-            <React.Fragment>
-              <p>Showing {allMovies.length} movies in the database.</p>
-              <table id="movies" className="table table-hover">
-                <thead>
-                  <tr>
-                    <th>Title</th>
-                    <th>Genre</th>
-                    <th>Stock</th>
-                    <th>Rate</th>
-                    <th>Liked</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>{this.getMoviesHtml(movies)}</tbody>
-              </table>
-            </React.Fragment>
-          ) : (
-            <p>There are no movies in the database.</p>
-          )}
+      <div className="row">
+        <div className="div col-lg-2">
+          <ListGroup
+            items={this.state.genres}
+            onItemSelect={this.handleGenreSelect}
+            selectedItem={this.state.selectedGenre}
+          />
         </div>
-
-        <Pagination
-          itemsCount={allMovies.length}
-          pageSize={pageSize}
-          onPageChange={this.handlePageChange}
-          currentPage={currentPage}
-        />
-      </React.Fragment>
+        <div className="div col">
+          <div className="mb-3">
+            <p>Showing {filtered.length} movies in the database.</p>
+            <table id="movies" className="table table-hover">
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Genre</th>
+                  <th>Stock</th>
+                  <th>Rate</th>
+                  <th>Liked</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>{this.getMoviesHtml(movies)}</tbody>
+            </table>
+          </div>
+          <Pagination
+            itemsCount={filtered.length}
+            pageSize={pageSize}
+            onPageChange={this.handlePageChange}
+            currentPage={currentPage}
+          />
+        </div>
+      </div>
     );
   }
 }
