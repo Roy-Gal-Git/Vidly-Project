@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { getMovies } from "../services/fakeMovieService";
 import { getGenres } from "../services/fakeGenreService";
-import Like from "./like";
-import Pagination from "./pagination";
-import ListGroup from "./listGroup";
+import Pagination from "./common/pagination";
+import ListGroup from "./common/listGroup";
+import MoviesTable from "./moviesTable";
 import { paginate } from "../utils/paginate";
 
 class Movies extends Component {
@@ -19,11 +19,10 @@ class Movies extends Component {
     this.setState({ movies: getMovies(), genres });
   }
 
-  handleDelete(_id) {
-    this.setState({
-      movies: this.state.movies.filter((movie) => movie._id !== _id),
-    });
-  }
+  handleDelete = (movie) => {
+    const movies = this.state.movies.filter((m) => m._id !== movie._id);
+    this.setState({ movies });
+  };
 
   handleLike = (movie) => {
     const movies = [...this.state.movies];
@@ -39,34 +38,7 @@ class Movies extends Component {
   };
 
   handleGenreSelect = (genre) => {
-    this.setState({ selectedGenre: genre, currentPage: 1});
-  };
-
-  getMoviesHtml = (movies) => {
-    return movies.map((movie) => {
-      const { _id, title, genre, numberInStock, dailyRentalRate, liked } =
-        movie;
-
-      return (
-        <tr key={_id}>
-          <td>{title}</td>
-          <td>{genre.name}</td>
-          <td>{numberInStock}</td>
-          <td>{dailyRentalRate}</td>
-          <td>
-            <Like liked={liked} onClick={() => this.handleLike(movie)} />
-          </td>
-          <td>
-            <button
-              onClick={() => this.handleDelete(_id)}
-              className="btn btn-danger btn-sm"
-            >
-              Delete
-            </button>
-          </td>
-        </tr>
-      );
-    });
+    this.setState({ selectedGenre: genre, currentPage: 1 });
   };
 
   render() {
@@ -99,19 +71,11 @@ class Movies extends Component {
         <div className="div col">
           <div className="mb-3">
             <p>Showing {filtered.length} movies in the database.</p>
-            <table id="movies" className="table table-hover">
-              <thead>
-                <tr>
-                  <th>Title</th>
-                  <th>Genre</th>
-                  <th>Stock</th>
-                  <th>Rate</th>
-                  <th>Liked</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>{this.getMoviesHtml(movies)}</tbody>
-            </table>
+            <MoviesTable
+              movies={movies}
+              onDelete={this.handleDelete}
+              onLike={this.handleLike}
+            />
           </div>
           <Pagination
             itemsCount={filtered.length}
