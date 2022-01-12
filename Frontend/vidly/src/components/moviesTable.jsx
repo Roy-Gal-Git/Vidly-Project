@@ -1,44 +1,51 @@
-import React from "react";
+import React, { Component } from "react";
 import Like from "./common/like";
+import TableHeader from "./common/tableHeader";
 
-const MoviesTable = (props) => {
-  const { movies, onDelete, onLike, onSort } = props;
+class MoviesTable extends React.Component {
+  columns = [
+    { label: "Title", path: "title" },
+    { label: "Genre", path: "genre.name" },
+    { label: "Stock", path: "numberInStock" },
+    { label: "Rate", path: "dailyRentalRate" },
+    { key: "like " },
+    { key: "delete" },
+  ];
 
-  return (
-    <table id="movies" className="table table-hover">
-      <thead>
-        <tr>
-          <th onClick={() => onSort("title")}>Title</th>
-          <th onClick={() => onSort("genre.name")}>Genre</th>
-          <th onClick={() => onSort("numberInStock")}>Stock</th>
-          <th onClick={() => onSort("dailyRentalRate")}>Rate</th>
-          <th></th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        {movies.map((movie) => (
-          <tr key={movie._id}>
-            <td>{movie.title}</td>
-            <td>{movie.genre.name}</td>
-            <td>{movie.numberInStock}</td>
-            <td>{movie.dailyRentalRate}</td>
-            <td>
-              <Like liked={movie.liked} onClick={() => onLike(movie)} />
-            </td>
-            <td>
-              <button
-                onClick={() => onDelete(movie)}
-                className="btn btn-danger btn-sm"
-              >
-                Delete
-              </button>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
-};
+  render() {
+    const { movies, onDelete, onLike, onSort, sortColumn } = this.props;
+
+    return (
+      <table id="movies" className="table table-hover">
+        <TableHeader
+          columns={this.columns}
+          onSort={onSort}
+          sortColumn={sortColumn}
+        />
+        <tbody>
+          {movies.map((movie) => (
+            <tr key={movie._id}>
+              <td>{movie.title}</td>
+              <td>{movie.genre.name}</td>
+              <td>{movie.numberInStock}</td>
+              <td>{movie.dailyRentalRate}</td>
+              <td>
+                <Like liked={movie.liked} onClick={() => onLike(movie)} />
+              </td>
+              <td>
+                <button
+                  onClick={() => onDelete(movie)}
+                  className="btn btn-danger btn-sm"
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    );
+  }
+}
 
 export default MoviesTable;
