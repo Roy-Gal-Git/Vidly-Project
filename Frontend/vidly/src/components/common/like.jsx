@@ -2,9 +2,9 @@ import React, { Component } from "react";
 
 class Like extends React.Component {
   render() {
-    let classes = "fa fa-heart";
+    let classes = "clickable fa fa-heart";
     if (!this.props.liked) classes += "-o";
-    else classes = "fa fa-heart";
+    else classes = "clickalbe fa fa-heart";
 
     return (
       <React.Fragment>
@@ -12,7 +12,6 @@ class Like extends React.Component {
           onClick={this.props.onClick}
           className={classes}
           aria-hidden="true"
-          style={{ cursor: "pointer" }}
         ></i>
       </React.Fragment>
     );
