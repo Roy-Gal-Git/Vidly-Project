@@ -5,7 +5,7 @@ import Pagination from "./common/pagination";
 import ListGroup from "./common/listGroup";
 import MoviesTable from "./moviesTable";
 import { paginate } from "../utils/paginate";
-import _ from "lodash";
+import _, { filter } from "lodash";
 
 class Movies extends Component {
   state = {
@@ -47,14 +47,13 @@ class Movies extends Component {
     this.setState({ sortColumn });
   };
 
-  render() {
+  getPageData = () => {
     const {
       currentPage,
       pageSize,
       selectedGenre,
       movies: allMovies,
       sortColumn,
-      columns,
     } = this.state;
 
     const filtered =
@@ -66,8 +65,16 @@ class Movies extends Component {
 
     const movies = paginate(sorted, currentPage, pageSize);
 
+    return { totalCount: filtered.length, data: movies };
+  };
+
+  render() {
+    const { currentPage, pageSize, movies: allMovies, sortColumn } = this.state;
+
     if (allMovies.length === 0)
       return <p>There are no movies in the database.</p>;
+
+    const { totalCount, data: movies } = this.getPageData();
 
     return (
       <div className="row">
@@ -80,7 +87,7 @@ class Movies extends Component {
         </div>
         <div className="div col">
           <div className="mb-3">
-            <p>Showing {filtered.length} movies in the database.</p>
+            <p>Showing {totalCount} movies in the database.</p>
             <MoviesTable
               movies={movies}
               onDelete={this.handleDelete}
@@ -90,7 +97,7 @@ class Movies extends Component {
             />
           </div>
           <Pagination
-            itemsCount={filtered.length}
+            itemsCount={totalCount}
             pageSize={pageSize}
             onPageChange={this.handlePageChange}
             currentPage={currentPage}
