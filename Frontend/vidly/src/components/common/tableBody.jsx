@@ -6,6 +6,11 @@ class TableBody extends Component {
     return item._id + (column.label || column.key);
   };
 
+  renderCell = (item, column) => {
+    if (column.content) return column.content(item);
+    return _.get(item, column.path);
+  };
+
   render() {
     const { data, columns } = this.props;
 
@@ -15,7 +20,7 @@ class TableBody extends Component {
           <tr key={item._id}>
             {columns.map((column) => (
               <td key={this.createKey(item, column)}>
-                {_.get(item, column.path) || column.content(item)}
+                {this.renderCell(item, column)}
               </td>
             ))}
           </tr>
